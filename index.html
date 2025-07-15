@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>بینظیر انکم سپورٹ پروگرام - PMT اسکور چیک کریں</title>
+  <meta name="title" content="BISP PMT Score Checker - Check Your PMT Score Online">
+  <meta name="description" content="Check your PMT score online for BISP 8171 eligibility. Enter CNIC to see your PMT score and status.">
+  <meta name="keywords" content="BISP, PMT Score, 8171 Check, CNIC Checker, BISP 8171 Web Portal">
+  <meta name="author" content="PMT Score Checker Team">
+  <meta property="og:title" content="BISP PMT Score Checker" />
+  <meta property="og:description" content="Check your PMT score online for BISP 8171 eligibility." />
+  <meta property="og:image" content="https://pmtscorecheck.github.io/bisp-pmt-checker/preview.jpg" />
+  <meta property="og:url" content="https://pmtscorecheck.github.io/bisp-pmt-checker/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap');
 
@@ -34,6 +44,7 @@
       padding: 2rem;
       border: 1px solid #ccc;
       border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.05);
     }
 
     label {
@@ -65,11 +76,13 @@
 
     .result {
       margin-top: 1.5rem;
-      background-color: #e9f5eb;
+      background-color: #f1f8f2;
       padding: 1rem;
-      border-right: 4px solid #116530;
+      border: 1px solid #116530;
+      border-radius: 6px;
       font-size: 1.2rem;
       display: none;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
     }
 
     .eligible {
@@ -80,6 +93,25 @@
     .not-eligible {
       color: red;
       font-weight: bold;
+    }
+
+    .info-box {
+      background-color: #fffef7;
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      color: #333;
+      border-radius: 6px;
+      line-height: 1.7;
+    }
+
+    .disclaimer {
+      font-size: 0.75rem;
+      color: #aaa;
+      position: fixed;
+      left: 5px;
+      bottom: 3px;
     }
 
     footer {
@@ -99,14 +131,22 @@
 
   <div class="container">
     <label for="cnicInput">اپنا شناختی کارڈ نمبر درج کریں:</label>
-    <input type="text" id="cnicInput" placeholder="36102XXXXXXXXX" />
+    <input type="text" id="cnicInput" placeholder="36102XXXXXXXXX" maxlength="13"/>
     <button onclick="checkScore()">PMT اسکور چیک کریں</button>
     <div class="result" id="resultBox"></div>
+
+    <div class="info-box">
+      <strong>بینظیر انکم سپورٹ پروگرام:</strong> BISP ka maksad ghareeb aur mustahiq gharano ko maali madad dena hai. PMT (Proxy Means Test) aik formula hai jo aapki ghar ki maashi surat-e-haal ka andaza lagata hai.<br><br>
+      Agar aapka PMT score **30 se kam** hai to aapko **"Ahal" (eligible)** samjha jata hai. Zyada score hone par **"Ghair Ahal"** likha ayega.<br>
+      Yeh tool sirf aapko idea dene ke liye hai. Official natija sirf BISP ki taraf se diya jata hai.
+    </div>
   </div>
 
   <footer>
     © 2025 بینظیر انکم سپورٹ پروگرام، تمام حقوق محفوظ ہیں۔
   </footer>
+
+  <div class="disclaimer">Unofficial Tool</div>
 
   <script>
     const data = [
@@ -125,6 +165,13 @@
       const input = document.getElementById("cnicInput").value.trim();
       const resultBox = document.getElementById("resultBox");
 
+      if (input.length !== 13 || !/^\d+$/.test(input)) {
+        resultBox.innerHTML = "درست 13 ہندسوں والا شناختی کارڈ نمبر درج کریں۔";
+        resultBox.style.display = "block";
+        resultBox.className = "result not-eligible";
+        return;
+      }
+
       const record = data.find(item => item.cnic === input);
 
       let score, status;
@@ -141,12 +188,13 @@
         savedScores[input] = { score, status };
       }
 
-      const statusClass = status === "اہل" ? "eligible" : "not-eligible";
+      const statusClass = score < 30 ? "eligible" : "not-eligible";
       resultBox.innerHTML = `
         <strong>شناختی کارڈ:</strong> ${input}<br>
         <strong>PMT اسکور:</strong> ${score}<br>
         <strong>درجہ:</strong> <span class="${statusClass}">${status}</span>
       `;
+      resultBox.className = `result ${statusClass}`;
       resultBox.style.display = "block";
     }
   </script>
