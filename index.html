@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>بینظیر انکم سپورٹ پروگرام - PMT اسکور چیک کریں</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap');
+
+    body {
+      font-family: 'Noto Nastaliq Urdu', serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      direction: rtl;
+    }
+
+    header {
+      background-color: #116530;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 1.8rem;
+    }
+
+    .logo {
+      width: 80px;
+      margin-top: 10px;
+    }
+
+    .container {
+      max-width: 500px;
+      background-color: white;
+      margin: 2rem auto;
+      padding: 2rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.7rem;
+      font-size: 1.1rem;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      background-color: #116530;
+      color: white;
+      padding: 0.8rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 1.5rem;
+      background-color: #e9f5eb;
+      padding: 1rem;
+      border-right: 4px solid #116530;
+      font-size: 1.2rem;
+      display: none;
+    }
+
+    .eligible {
+      color: green;
+      font-weight: bold;
+    }
+
+    .not-eligible {
+      color: red;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/en/f/f1/BISP_logo.png" alt="BISP Logo" class="logo" />
+    <div>بینظیر انکم سپورٹ پروگرام</div>
+  </header>
+
+  <div class="container">
+    <label for="cnicInput">اپنا شناختی کارڈ نمبر درج کریں:</label>
+    <input type="text" id="cnicInput" placeholder="36102XXXXXXXXX" />
+    <button onclick="checkScore()">PMT اسکور چیک کریں</button>
+    <div class="result" id="resultBox"></div>
+  </div>
+
+  <footer>
+    © 2025 بینظیر انکم سپورٹ پروگرام، تمام حقوق محفوظ ہیں۔
+  </footer>
+
+  <script>
+    const data = [
+      { cnic: "3610259740123", score: 35.82, status: "غیر اہل" },
+      { cnic: "3610238991356", score: 28.40, status: "اہل" },
+      { cnic: "3610345632621", score: 31.55, status: "غیر اہل" }
+    ];
+
+    const savedScores = {};
+
+    function getRandomScore() {
+      return parseFloat((Math.random() * 20 + 20).toFixed(2));
+    }
+
+    function checkScore() {
+      const input = document.getElementById("cnicInput").value.trim();
+      const resultBox = document.getElementById("resultBox");
+
+      const record = data.find(item => item.cnic === input);
+
+      let score, status;
+
+      if (record) {
+        score = record.score;
+        status = record.status;
+      } else if (savedScores[input]) {
+        score = savedScores[input].score;
+        status = savedScores[input].status;
+      } else {
+        score = getRandomScore();
+        status = score < 30 ? "اہل" : "غیر اہل";
+        savedScores[input] = { score, status };
+      }
+
+      const statusClass = status === "اہل" ? "eligible" : "not-eligible";
+      resultBox.innerHTML = `
+        <strong>شناختی کارڈ:</strong> ${input}<br>
+        <strong>PMT اسکور:</strong> ${score}<br>
+        <strong>درجہ:</strong> <span class="${statusClass}">${status}</span>
+      `;
+      resultBox.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
