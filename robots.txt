@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pmtscorecheck.github.io/bisp-pmt-checker/sitemap.xml
